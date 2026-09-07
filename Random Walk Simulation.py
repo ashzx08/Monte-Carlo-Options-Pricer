@@ -1,5 +1,6 @@
 import random
 import numpy as np
+import matplotlib.pyplot as plt
 
 Number_of_steps = int(input("Enter the number of steps for the random walk simulation: "))
 
@@ -10,7 +11,7 @@ current_step = 0
 current_position = starting_position
 final_position = 0
 
-while current_step <= Number_of_steps:
+while current_step < Number_of_steps:
     step = random.choice(step_sizes)
     current_position += step
     positions.append(current_position)
@@ -19,5 +20,11 @@ while current_step <= Number_of_steps:
 final_position = current_position
 numpy_positions = np.array(positions)
 average = np.average(numpy_positions)
+steps = np.arange(0, Number_of_steps + 1)
 print(positions)
+print(final_position)
 print(average)
+
+plt.plot(steps, numpy_positions)
+plt.title("Random Walk Simulation")
+plt.show()
