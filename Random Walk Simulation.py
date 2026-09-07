@@ -1,4 +1,5 @@
 import random
+import numpy as np
 
 Number_of_steps = int(input("Enter the number of steps for the random walk simulation: "))
 
@@ -16,4 +17,7 @@ while current_step <= Number_of_steps:
     current_step += 1
 
 final_position = current_position
+numpy_positions = np.array(positions)
+average = np.average(numpy_positions)
 print(positions)
+print(average)
