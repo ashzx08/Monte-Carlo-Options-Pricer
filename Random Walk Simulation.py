@@ -35,3 +35,7 @@ print(f"Average final position: {average_final_position}")
 print(f"Standard deviation of final positions: {std_final_position}")
 print(f"Maximum final position: {max_final_position}")
 print(f"Minimum final position: {min_final_position}")
+
+plt.hist(numpy_final_positions)
+plt.title("Histogram of Final Positions in Random Walk Simulation")
+plt.show()
