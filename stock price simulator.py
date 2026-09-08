@@ -29,3 +29,7 @@ print("Mean final stock price after one year: ", np.mean(numpy_final_prices))
 print("Standard deviation of final stock prices: ", np.std(numpy_final_prices))
 print("Minimum final stock price: ", np.min(numpy_final_prices))
 print("Maximum final stock price: ", np.max(numpy_final_prices))
+
+plt.hist(numpy_final_prices)
+plt.title("Distribution of Final Stock Prices After One Year")
+plt.show()
