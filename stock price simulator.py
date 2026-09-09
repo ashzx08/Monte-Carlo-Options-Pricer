@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import scipy.stats as sp
 
 Initial_stock_price = 100
 current_price = Initial_stock_price
@@ -29,6 +30,21 @@ def simulate_year(Initial_stock_price):
         new_price = stock_price_calculation(current_stock_price)
         current_stock_price = new_price
     return current_stock_price
+
+def black_scholes_call_price(S=100, K=100, T=1, r=0.05, annual_volatility=annual_volatility):
+
+    # Formula for black-scholes call option price
+    # C = S * N(d1) - K * exp(-r * T) * N(d2)
+    # where:
+    # d1 = (ln(S/K) + (r + 0.5 * annual_volatility^2) * T) / (annual_volatility * sqrt(T))
+    # d2 = d1 - annual_volatility * sqrt(T)
+
+    d1 = (np.log(S/K) + (r + 0.5 * annual_volatility**2) * T) / annual_volatility * np.sqrt(T)
+    d2 = d1 - annual_volatility * np.sqrt(T)
+    N_d1 = sp.norm.cdf(d1)
+    N_d2 = sp.norm.cdf(d2)
+    call_price = S * N_d1 - K * np.exp(-r * T) * N_d2
+    return call_price
 
 for _ in range(Number_of_simulations):
     final_price = simulate_year(Initial_stock_price)
