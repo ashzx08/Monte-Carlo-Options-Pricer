@@ -1,0 +1,42 @@
+import numpy as np
+import time
+
+class StockSimulator:
+
+    def __init__(self, stock_price, time_to_expiration, risk_free_rate, annual_volatility, number_of_steps):
+        self.S = stock_price
+        self.T = time_to_expiration
+        self.r = risk_free_rate
+        self.V_a=annual_volatility
+        self.number_of_steps = number_of_steps
+        self.delta_t = self.T / self.number_of_steps
+
+    def simulate_step(self, current_price):
+
+        # Simulate a single step in the stock price path using Geometric Brownian Motion
+        # S(t+dt) = S(t) * exp(drift + diffusion)
+        # drift = (risk_free_rate - 0.5 * volatility^2) * dt
+        # diffusion = volatility * sqrt(dt) * Z
+        # dt is the time increment
+        # Z is a random variable drawn from a standard normal distribution
+
+        Z = np.random.normal(loc=0, scale=1)
+
+        # Calculate the drift and diffusion components of the stock price change
+        drift = (self.r - 0.5 * (self.V_a **2)) * self.delta_t
+        diffusion = self.V_a * np.sqrt(self.delta_t) * Z
+
+        # Calculate the new stock price based on the current price, drift, and diffusion
+        new_price = current_price * np.exp(drift + diffusion)
+        return new_price
+
+    def simulate_path(self):
+        current_price = self.S
+        stock_prices = [current_price]
+        for _ in range(self.number_of_steps):
+            current_price = self.simulate_step(current_price)
+            stock_prices.append(current_price)
+        return stock_prices
+
+
+simulator = StockSimulator(100, 0.5, 0.05, 0.1587, 126)
