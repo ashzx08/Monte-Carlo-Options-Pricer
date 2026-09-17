@@ -31,12 +31,15 @@ class StockSimulator:
         return new_price
 
     def simulate_path(self):
-        current_price = self.S
-        stock_prices = [current_price]
-        for _ in range(self.number_of_steps):
-            current_price = self.simulate_step(current_price)
-            stock_prices.append(current_price)
+        Z = np.random.normal(loc=0, scale=1, size=self.number_of_steps)
+        
+        # Calculate the drift and diffusion components of the stock price change
+        drift = (self.r - 0.5 * (self.V_a **2)) * self.delta_t
+        diffusion = self.V_a * np.sqrt(self.delta_t) * Z
+        
+        # Calculate the new stock prices based on the current price, drift, and diffusion
+        step_multipliers = np.exp(drift + diffusion)
+        cumulative_multipliers = np.cumprod(step_multipliers)
+        stock_prices = np.insert(self.S * cumulative_multipliers, 0, self.S)
         return stock_prices
-
-
-simulator = StockSimulator(100, 0.5, 0.05, 0.1587, 126)
+        
