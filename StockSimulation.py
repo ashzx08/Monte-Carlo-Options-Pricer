@@ -1,5 +1,4 @@
 import numpy as np
-import time
 
 class StockSimulator:
 
@@ -42,4 +41,20 @@ class StockSimulator:
         cumulative_multipliers = np.cumprod(step_multipliers)
         stock_prices = np.insert(self.S * cumulative_multipliers, 0, self.S)
         return stock_prices
-        
+
+    def simulate_paths(self, number_of_simulations):
+        Z = np.random.normal(loc=0, scale=1, size=((number_of_simulations, self.number_of_steps)))
+
+        # Calculate the drift and diffusion components of the stock price change
+        drift = (self.r - 0.5 * (self.V_a **2)) * self.delta_t
+        diffusion = self.V_a * np.sqrt(self.delta_t) * Z
+
+        # Calculate the new stock prices based on the current price, drift, and diffusion
+        step_multipliers = np.exp(drift + diffusion)
+        cumulative_multipliers = np.cumprod(step_multipliers, axis=1)
+
+        # Creating a 2D array with the intial value being initial stock price and stacking the array of paths onto it
+        initial_prices = np.full((number_of_simulations, 1), self.S)
+        stock_prices = np.hstack((initial_prices, self.S*cumulative_multipliers))
+        return stock_prices
+
