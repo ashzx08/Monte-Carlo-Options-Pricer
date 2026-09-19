@@ -1,6 +1,7 @@
 import numpy as np
 from option import EuropeanCall
 from StockSimulation import StockSimulator
+import time
 
 class MonteCarloPricer:
 
@@ -10,25 +11,27 @@ class MonteCarloPricer:
         self.N = number_of_simulations
 
     def Monte_Carlo_Simulations(self):
-        option_payoffs = []
-        for _ in range(self.N):
-            path = self.stock_simulator.simulate_path()
-            final_price = path[-1]
-            payoff = self.option.payoff(final_price)
-            option_payoffs.append(payoff)
-
+        final_prices = self.stock_simulator.simulate_final_prices(self.N)
+        option_payoffs = self.option.payoff(final_prices)
         return option_payoffs
 
     def option_price(self):
-        option_payoffs = np.array(self.Monte_Carlo_Simulations())
+        option_payoffs = self.Monte_Carlo_Simulations()
         average_payoff = np.mean(option_payoffs)
         option_value = np.exp(-(self.stock_simulator.r) * (self.stock_simulator.T)) * (average_payoff)
-        return option_value
+        return option_value, option_payoffs
         
 
 stock1 = StockSimulator(100, 0.5, 0.05, 0.1587, 126)
 option1 = EuropeanCall(100)
-stock_pricer1 = MonteCarloPricer(stock1, option1, 10000)
+stock_pricer1 = MonteCarloPricer(stock1, option1, 100000)
 
-option_value = stock_pricer1.option_price()
-print(option_value)
+start = time.perf_counter()
+
+option_value, option_payoffs = stock_pricer1.option_price()
+
+end = time.perf_counter()
+
+print(option_payoffs.shape)
+print(f"Option price: £{option_value:.2f}")
+print(f"Time taken: {end - start:.4f} seconds")
