@@ -58,3 +58,11 @@ class StockSimulator:
         stock_prices = np.hstack((initial_prices, self.S*cumulative_multipliers))
         return stock_prices
 
+    def simulate_final_prices(self, number_of_simulations):
+        Z = np.random.normal(loc=0, scale=1, size=number_of_simulations)
+
+        # Calculate the drift and diffusion components of the stock price change
+        drift = (self.r - 0.5 * (self.V_a **2)) * self.T
+        diffusion = self.V_a * np.sqrt(self.T) * Z
+
+        return self.S * np.exp(drift + diffusion)
