@@ -17,7 +17,7 @@ class MonteCarloPricer:
     def option_price(self):
         option_payoffs = self.simulate_payoffs()
         average_payoff = np.mean(option_payoffs)
-        discount_factor = np.exp(-(self.stock_simulator.r) * (self.stock_simulator.T))
+        discount_factor = np.exp(-(self.stock_simulator.risk_free_rate) * (self.stock_simulator.time_to_expiration))
         option_value = discount_factor * (average_payoff)
         standard_error = discount_factor * (np.std(option_payoffs) / np.sqrt(self.number_of_simulations))
         confidence_interval = (option_value - 1.96 * standard_error, option_value + 1.96 * standard_error)
